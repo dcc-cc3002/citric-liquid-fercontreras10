@@ -30,22 +30,30 @@ import scala.util.Random
   * @param evasion The player's skill to completely avoid certain attacks.
   * @param randomNumberGenerator A utility to generate random numbers. Defaults to a new `Random`
   *                              instance.
+  * @param stars The number of stars the player has obtained. Defaults to 0.
   *
   * @author [[https://github.com/danielRamirezL/ Daniel Ramírez L.]]
   * @author [[https://github.com/joelriquelme/ Joel Riquelme P.]]
   * @author [[https://github.com/r8vnhill/ Ignacio Slater M.]]
   * @author [[https://github.com/Seivier/ Vicente González B.]]
-  * @author [[https://github.com/~Your github account~/ ~Your Name~]]
+  * @author [[https://github.com/fercontreras10/ Fernanda Contreras C.]]
   */
 class PlayerCharacter(val name: String,
               val maxHp: Int,
               val attack: Int,
               val defense: Int,
               val evasion: Int,
-              val randomNumberGenerator: Random = new Random()) {
+              val randomNumberGenerator: Random = new Random(),
+              val stars: Int = 0) {
 
   /** Rolls a dice and returns a value between 1 to 6. */
   def rollDice(): Int = {
     randomNumberGenerator.nextInt(6) + 1
   }
+
+  /** Increases the number of stars the player has by the given amount. */
+ /* def starsCounter(amount: Int): Unit = {
+    stars ++= amount
+  }*/
+
 }
