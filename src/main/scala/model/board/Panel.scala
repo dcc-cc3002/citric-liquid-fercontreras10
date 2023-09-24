@@ -1,7 +1,7 @@
 package cl.uchile.dcc.citric
 package model.board
 
-import model.PlayerCharacter
+import model.character.{PlayerCharacter, WildUnit}
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -53,4 +53,11 @@ trait Panel {
   def removeCharacter(player: PlayerCharacter): Unit = {
     characters -= player
   }
+
+  /**
+   *
+   */
+  /*def recoverHP(player: PlayerCharacter): Unit = {
+    player.currentHP += 1
+  }*/
 }

@@ -1,8 +1,7 @@
 package cl.uchile.dcc.citric
 package model.board
 
-import model.PlayerCharacter
-
+import cl.uchile.dcc.citric.model.character.PlayerCharacter
 import scala.collection.mutable.ArrayBuffer
 
 /** The `NeutralPanel` class represents a panel on the board.

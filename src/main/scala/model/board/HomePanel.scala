@@ -1,8 +1,7 @@
 package cl.uchile.dcc.citric
 package model.board
 
-import model.PlayerCharacter
-
+import cl.uchile.dcc.citric.model.character.PlayerCharacter
 import scala.collection.mutable.ArrayBuffer
 
 /** The `HomePanel` class represents a panel on the board.
@@ -22,7 +21,8 @@ class HomePanel extends Panel {
    */
   override var nextPanels: ArrayBuffer[Panel] = ArrayBuffer()
 
-
-
+  /** The player's character recovers 1 HP.
+   *
+   */
 
 }
