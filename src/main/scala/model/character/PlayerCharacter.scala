@@ -1,6 +1,8 @@
 package cl.uchile.dcc.citric
 package model.character
 
+import model.game.{Norma, NormaType}
+
 import scala.util.Random
 
 /** The `PlayerCharacter` class represents a character or avatar in the game, encapsulating
@@ -49,6 +51,9 @@ class PlayerCharacter(val name: String,
                       var victories: Int = 0,
                       var stateKO: Boolean = false) {
 
+  private var chapters: Int = 0
+  var normaLevel: NormaType = Norma.Norma1
+
   /** Rolls a dice and returns a value between 1 to 6.
    *
    * @return a random number between 1 and 6.
@@ -88,24 +93,52 @@ class PlayerCharacter(val name: String,
     }
   }
 
+  def chooseNormaObjective(objective: NormaType): Unit = {
+    normaLevel = objective
+    (stars, victories) match {
+      case (stars, victories) if stars >= objective.stars && victories >= objective.victories => increaseNormaLevel()
+      case _ =>
+    }
+  }
+
+  def increaseNormaLevel(): Unit = {
+    normaLevel match {
+      case Norma.Norma1 => chooseNormaObjective(Norma.Norma2)
+      case Norma.Norma2 => chooseNormaObjective(Norma.Norma3)
+      case Norma.Norma3 => chooseNormaObjective(Norma.Norma4)
+      case Norma.Norma4 => chooseNormaObjective(Norma.Norma5)
+      case Norma.Norma5 => chooseNormaObjective(Norma.Norma6)
+      case Norma.Norma6 => (s"You have won the game!")
+    }
+  }
+
   /**
    *
    */
   def knockOut(): Unit = {
-    if (currentHP <= 0) // to check: or just == 0?
+    if (currentHP <= 0) {// to check: or just == 0?
       stateKO = true
+      //recovery()
+    }
   }
 
-  /*def recover(): Unit = {
+  /*def recovery(): Unit = {
     if(stateKO) {
-      val recovery = 6 - victories
+      rollDice()
+      val recovery = 6 - chapters
       stateKO = false
       currentHP = maxHp
+      //endTurn()
     }
   }*/
 
-  /*def combat(enemy: WildUnit): Unit = {
+  def increaseChapters(): Unit = {
+    chapters += 1
+  }
+  def startTurn(player: PlayerCharacter): Unit = {
+    player.rollDice()
+    player.increaseStars((chapters / 5) + 1)
 
-  }*/
+  }
 
 }

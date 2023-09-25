@@ -1,13 +1,15 @@
 package cl.uchile.dcc.citric
-package model.board
+package model.game
 
-import cl.uchile.dcc.citric.model.character.PlayerCharacter
+import model.board.Panel
+import model.character.PlayerCharacter
+
 import scala.collection.mutable.ArrayBuffer
 
 /**
  *
  */
-class GameBoard {
+class GamePlay {
   private var chapters: Int = 0
   private val players: ArrayBuffer[PlayerCharacter] = ArrayBuffer.empty
   private val panels: ArrayBuffer[Panel] = ArrayBuffer.empty

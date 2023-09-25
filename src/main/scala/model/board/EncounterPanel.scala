@@ -15,6 +15,12 @@ class EncounterPanel() extends Panel {
   /**
    *
    */
+  val enemy: ArrayBuffer[WildUnit] = ArrayBuffer()
+
+
+  /**
+   *
+   */
   private var visibleWildUnit : Option[WildUnit] = None
 
   /** An array of the characters currently positioned on this panel.
@@ -30,24 +36,24 @@ class EncounterPanel() extends Panel {
   /**
    *
    */
-  val enemies: Array[WildUnit] = Array(
+  private val enemies: Array[WildUnit] = Array(
     new WildUnit("Chicken", 3, 3, -1, -1, +1),
     new WildUnit("Robo ball", 3, 3, -1, +1, -1),
     new WildUnit("Seagull", 3, 3, +1, -1, -1)
   )
 
-  def showWildUnit(enemy: WildUnit): Unit = {
+  def addWildUnit(enemy: WildUnit): Unit = {
     val enemy = enemies(scala.util.Random.nextInt(enemies.length))
     visibleWildUnit = Some(enemy)
     println(s"Encountered ${enemy.name}!")
   }
 
-  def hideWildUnit(enemy: WildUnit): Unit = {
+  private def hideWildUnit(): Unit = {
     visibleWildUnit match {
       case Some(enemy) if enemy.currentHP <= 0 =>
         println(s"Defeated ${enemy.name}!")
         visibleWildUnit = None
-      //case None => println("No enemy to hide!")
+      case _ => println("No enemy to combat!")
     }
   }
 
@@ -55,17 +61,20 @@ class EncounterPanel() extends Panel {
    *
    */
   def initiateCombat(player: PlayerCharacter, enemy: WildUnit): Unit = {
-    println(s"Player: ${player.name} | HP: ${player.currentHP} | ATK: ${player.attack} | DEF: ${player.defense} | EVD: ${player.evasion}")
-    println(s"Enemy: ${enemy.name} | HP: ${enemy.currentHP} | ATK: ${enemy.attack} | DEF: ${enemy.defense} | EVD: ${enemy.evasion}")
-    println("Combat started!")
-
-    if (enemy.currentHP <= 0) {
-      hideWildUnit(enemy)
+    visibleWildUnit match {
+      case Some(enemy) =>
+        if (enemy.currentHP <= 0) {
+          hideWildUnit()
+          println(s"Defeated ${enemy.name}!")
+        }
+        else {
+          println(s"Player: ${player.name} | HP: ${player.currentHP} | ATK: ${player.attack} | DEF: ${player.defense} | EVA: ${player.evasion}")
+          println(s"Enemy: ${enemy.name} | HP: ${enemy.currentHP} | ATK: ${enemy.attack} | DEF: ${enemy.defense} | EVA: ${enemy.evasion}")
+          println("Combat started!")
+        }
+      case None => println("No enemy to combat!")
     }
   }
-
-
-
 
 
 }

@@ -54,10 +54,4 @@ trait Panel {
     characters -= player
   }
 
-  /**
-   *
-   */
-  /*def recoverHP(player: PlayerCharacter): Unit = {
-    player.currentHP += 1
-  }*/
 }

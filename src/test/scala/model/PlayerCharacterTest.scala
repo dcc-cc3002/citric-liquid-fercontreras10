@@ -75,6 +75,7 @@ class PlayerCharacterTest extends munit.FunSuite {
     val other =
       new PlayerCharacter(name, maxHp, currentHP, attack, defense, evasion, new Random(11), stars)
     for (_ <- 1 to 10) {
+      println(character.rollDice(), other.rollDice())
       assertEquals(character.rollDice(), other.rollDice())
     }
   }
@@ -101,8 +102,13 @@ class PlayerCharacterTest extends munit.FunSuite {
   }
 
   /*test("A character in KO state enters a Recovery state") {
-    character.recover()
+    character.recovery()
     assertEquals(character.stateKO, false)
+  }*/
+
+  /*test("When a character starts its turn increases its stars by (chapters / 5) + 1") {
+    character.startTurn()
+    assertEquals(character.stars, 6)
   }*/
 
 

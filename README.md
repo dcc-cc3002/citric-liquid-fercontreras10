@@ -14,7 +14,18 @@ purpose is to serve as an educational tool, teaching foundational programming co
 The remainder of this README is yours to complete. Take this opportunity to describe your
 contributions, the design decisions you've made, and any other information you deem necessary.
 
+### Tarea 1
 
+### Implemented functionalities
+The functionalities implemented this time include the Character, Enemies and Board Panels. 
+
+### Design decisions
+The design decisions 
+
+### Code Organization
+The code is organized
+
+### Design Patterns
 
 <div style="text-align:center;">
     <img src="https://i.creativecommons.org/l/by/4.0/88x31.png" alt="Creative Commons License">
