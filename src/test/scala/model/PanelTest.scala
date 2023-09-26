@@ -2,7 +2,7 @@ package cl.uchile.dcc.citric
 package model
 
 import model.board.{BonusPanel, DropPanel, EncounterPanel, HomePanel, NeutralPanel}
-import model.character.{PlayerCharacter, WildUnit}
+import model.character.PlayerCharacter
 
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
@@ -25,7 +25,20 @@ class PanelTest extends munit.FunSuite {
     assertEquals(character.stars, 6)
   }
 
-  //test("home panel")
+  test("A character is added to a HomePanel when the game starts") {
+    val homePanel = new HomePanel()
+    val character = new PlayerCharacter("testPlayer", 10, 10,1, 1, 1, new Random(11), 5)
+    homePanel.addCharacter(character)
+    assert(homePanel.characters.contains(character))
+  }
+
+  test("A character recuperates a HP when it falls on a HomePanel") {
+    val homePanel = new HomePanel()
+    val character = new PlayerCharacter("testPlayer", 10, 9,1, 1, 1, new Random(11), 5)
+    homePanel.addCharacter(character)
+    homePanel.activateHomePanel()
+    assertEquals(character.currentHP, 10)
+  }
 
   test("A character should lost stars when it falls on a drop panel") {
     val dropPanel = new DropPanel()
@@ -35,14 +48,22 @@ class PanelTest extends munit.FunSuite {
     assertEquals(character.stars, 4)
   }
 
-  /*test("A wild unit disappear from an encounter panel when defeated") {
+  test("An aleatory wild unit is correctly added to an encounter panel") {
+    val encounterPanel = new EncounterPanel()
+    encounterPanel.addWildUnit()
+    assert(encounterPanel.getVisibleWildUnit.isDefined)
+  }
+
+ /* test("A wild unit disappear from an encounter panel when defeated") {
     val encounterPanel = new EncounterPanel()
     val character = new PlayerCharacter("testPlayer", 10, 10,1, 1, 1, new Random(11), 5)
-    val enemy = new WildUnit("testWildUnit", 3, 0,-1, -1, +1, 5)
+    val enemy = new WildUnit("testWildUnit", 3, 1,-1, -1, +1, 5)
     encounterPanel.addCharacter(character)
-    encounterPanel.addWildUnit(enemy)
-    encounterPanel.initiateCombat(character, enemy)
-    assertEquals(encounterPanel.visibleWildUnit, None)
+    encounterPanel.addWildUnit()
+    val visibleEnemyBeforeCombat = encounterPanel.getVisibleWildUnit
+    encounterPanel.initiateCombat(character, visibleEnemyBeforeCombat.get)
+    val visibleEnemyAfterCombat = encounterPanel.getVisibleWildUnit
+    assert(visibleEnemyAfterCombat.isEmpty)
   }*/
 
 }

@@ -72,10 +72,10 @@ class PlayerCharacterTest extends munit.FunSuite {
   // A seed sets a fixed succession of random numbers, so you can know that the next numbers
   // are always the same for the same seed.
   test("A character should be able to roll a dice with a fixed seed") {
-    val other =
+    val other = {
       new PlayerCharacter(name, maxHp, currentHP, attack, defense, evasion, new Random(11), stars)
+    }
     for (_ <- 1 to 10) {
-      println(character.rollDice(), other.rollDice())
       assertEquals(character.rollDice(), other.rollDice())
     }
   }
@@ -90,10 +90,21 @@ class PlayerCharacterTest extends munit.FunSuite {
     assertEquals(character.stars, 2)
   }
 
-  test("A character should be able to increased their victories counter") {
+  test("A character should be able to increased their victories counter to 1 if the opponent is a WildUnit") {
     val opponentType = "WildUnit"
     character.increaseVictories(opponentType)
     assertEquals(character.victories, 1)
+  }
+
+  test("A character should be able to increased their victories counter to 2 if the opponent is a PlayerCharacter") {
+    val opponentType = "PlayerCharacter"
+    character.increaseVictories(opponentType)
+    assertEquals(character.victories, 2)
+  }
+
+  test("A character recover HP") {
+    character.recoverHP(2)
+    assertEquals(character.currentHP, 2)
   }
 
   test("A character enters a KO state when their HP is 0 or less") {
@@ -101,15 +112,22 @@ class PlayerCharacterTest extends munit.FunSuite {
     assertEquals(character.stateKO, true)
   }
 
-  /*test("A character in KO state enters a Recovery state") {
+  test("A character in KO state enters a Recovery state") {
     character.recovery()
     assertEquals(character.stateKO, false)
-  }*/
+  }
 
-  /*test("When a character starts its turn increases its stars by (chapters / 5) + 1") {
-    character.startTurn()
-    assertEquals(character.stars, 6)
-  }*/
+  test("A character in KO state does not recover if the dice result is less than 6 - chapters") {
+    character.knockOut()
+    character.recovery()
+    assertEquals(character.currentHP, 0)
+  }
 
+  test("A character in KO state recovers if the dice result is greater than or equal to 6 - chapters") {
+    character.knockOut()
+    character.setChapters(5)
+    character.recovery()
+    assertEquals(character.currentHP, maxHp)
+  }
 
 }

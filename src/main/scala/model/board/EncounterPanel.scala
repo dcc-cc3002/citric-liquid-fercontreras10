@@ -5,6 +5,10 @@ import model.character.{PlayerCharacter, WildUnit}
 
 import scala.collection.mutable.ArrayBuffer
 
+/**
+ *  EncounterPanel is not tested cause the combat is not implemented yet.
+ */
+
 /** The `EncounterPanel` class represents a panel on the board.
  *  An encounter panel is a type of panel where a character's initiate a combat with an aleatory WildUnit.
  *
@@ -42,29 +46,25 @@ class EncounterPanel() extends Panel {
     new WildUnit("Seagull", 3, 3, +1, -1, -1)
   )
 
-  def addWildUnit(enemy: WildUnit): Unit = {
+  def addWildUnit(): Unit = {
     val enemy = enemies(scala.util.Random.nextInt(enemies.length))
     visibleWildUnit = Some(enemy)
     println(s"Encountered ${enemy.name}!")
   }
 
-  private def hideWildUnit(): Unit = {
-    visibleWildUnit match {
-      case Some(enemy) if enemy.currentHP <= 0 =>
-        println(s"Defeated ${enemy.name}!")
-        visibleWildUnit = None
-      case _ => println("No enemy to combat!")
-    }
-  }
+  def getVisibleWildUnit: Option[WildUnit] = visibleWildUnit
 
   /** The player's character initiates a combat with an aleatory WildUnit.
    *
    */
-  def initiateCombat(player: PlayerCharacter, enemy: WildUnit): Unit = {
+ /* def initiateCombat(player: PlayerCharacter, enemy: WildUnit): Unit = {
+    println(s"visibleWildUnit: $visibleWildUnit")
+    println(s"enemy: $enemy")
     visibleWildUnit match {
-      case Some(enemy) =>
+      case Some(visibleEnemy) if visibleEnemy.name == enemy.name =>
+        println("Matching enemy names.")
         if (enemy.currentHP <= 0) {
-          hideWildUnit()
+          visibleWildUnit = None
           println(s"Defeated ${enemy.name}!")
         }
         else {
@@ -74,7 +74,7 @@ class EncounterPanel() extends Panel {
         }
       case None => println("No enemy to combat!")
     }
-  }
+  }*/
 
 
 }

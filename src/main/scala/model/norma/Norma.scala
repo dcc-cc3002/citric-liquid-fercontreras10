@@ -1,5 +1,7 @@
 package cl.uchile.dcc.citric
-package model.game
+package model.norma
+
+import model.character.PlayerCharacter
 
 object Norma  {
 

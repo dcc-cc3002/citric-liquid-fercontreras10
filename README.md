@@ -18,6 +18,7 @@ contributions, the design decisions you've made, and any other information you d
 
 ### Implemented functionalities
 The functionalities implemented this time include the Character, Enemies and Board Panels. 
+The EncounterPanel is not implemented completely cause the combat it's still not implemented.
 
 ### Design decisions
 The design decisions 

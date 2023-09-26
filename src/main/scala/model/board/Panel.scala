@@ -1,7 +1,7 @@
 package cl.uchile.dcc.citric
 package model.board
 
-import model.character.{PlayerCharacter, WildUnit}
+import model.character.PlayerCharacter
 
 import scala.collection.mutable.ArrayBuffer
 

@@ -1,5 +1,6 @@
 package cl.uchile.dcc.citric
-package model.game
+package model.norma
+
 
 /** Represents .
  *
@@ -7,13 +8,13 @@ package model.game
  */
 trait NormaType {
 
-    /** The norma */
-    def normaId: Int
+    /** The norma id */
+    val normaId: Int
 
     /** The number of stars required to reach this norma. */
-    def stars: Int
+    val stars: Int
 
     /** The number of victories required to reach this norma. */
-    def victories: Int
-}
+    val victories: Int
 
+}

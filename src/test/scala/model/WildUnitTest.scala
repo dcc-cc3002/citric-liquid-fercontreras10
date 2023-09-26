@@ -3,8 +3,6 @@ package model
 
 import model.character.WildUnit
 
-import scala.util.Random
-
 class WildUnitTest extends munit.FunSuite {
 
   private val name = "testChicken"
@@ -43,6 +41,5 @@ class WildUnitTest extends munit.FunSuite {
     enemy.increaseStars(5)
     assertEquals(enemy.stars, 10)
   }
-
 
 }

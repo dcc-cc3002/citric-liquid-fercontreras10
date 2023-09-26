@@ -1,7 +1,7 @@
 package cl.uchile.dcc.citric
 package model.character
 
-import model.game.{Norma, NormaType}
+import model.norma.{Norma, NormaType}
 
 import scala.util.Random
 
@@ -42,7 +42,7 @@ import scala.util.Random
   */
 class PlayerCharacter(val name: String,
                       val maxHp: Int,
-                      val currentHP: Int,
+                      var currentHP: Int,
                       val attack: Int,
                       val defense: Int,
                       val evasion: Int,
@@ -51,8 +51,14 @@ class PlayerCharacter(val name: String,
                       var victories: Int = 0,
                       var stateKO: Boolean = false) {
 
-  private var chapters: Int = 0
   var normaLevel: NormaType = Norma.Norma1
+  private var _chapters: Int = 1
+
+  private def chapters: Int = _chapters
+
+  def setChapters(value: Int): Unit = {
+    _chapters = value
+  }
 
   /** Rolls a dice and returns a value between 1 to 6.
    *
@@ -93,52 +99,40 @@ class PlayerCharacter(val name: String,
     }
   }
 
-  def chooseNormaObjective(objective: NormaType): Unit = {
-    normaLevel = objective
-    (stars, victories) match {
-      case (stars, victories) if stars >= objective.stars && victories >= objective.victories => increaseNormaLevel()
-      case _ =>
-    }
-  }
-
-  def increaseNormaLevel(): Unit = {
-    normaLevel match {
-      case Norma.Norma1 => chooseNormaObjective(Norma.Norma2)
-      case Norma.Norma2 => chooseNormaObjective(Norma.Norma3)
-      case Norma.Norma3 => chooseNormaObjective(Norma.Norma4)
-      case Norma.Norma4 => chooseNormaObjective(Norma.Norma5)
-      case Norma.Norma5 => chooseNormaObjective(Norma.Norma6)
-      case Norma.Norma6 => (s"You have won the game!")
-    }
-  }
-
-  /**
+  /** Recovers the player's health points.
    *
+   * Used in HomePanel when it activates.
+   *
+   * @param hp the amount of health points to recover.
+   */
+  def recoverHP(hp: Int): Unit = {
+    currentHP += hp
+  }
+
+  /** KO is a method that is called when a player's health points are 0 or less.
+   * It changes the state of the player to KO and calls the recovery method.
    */
   def knockOut(): Unit = {
     if (currentHP <= 0) {// to check: or just == 0?
       stateKO = true
-      //recovery()
+      recovery()
     }
   }
 
-  /*def recovery(): Unit = {
+  /** Recovery is a method that is called when a player is in KO state.
+   * It rolls a dice and if the result is greater than or equal to 6 - chapters,
+   * the player recovers.
+   *
+   * It's missing the implementation of turns.
+   */
+  def recovery(): Unit = {
     if(stateKO) {
-      rollDice()
+      val diceResult = rollDice()
       val recovery = 6 - chapters
-      stateKO = false
-      currentHP = maxHp
-      //endTurn()
+      if (diceResult >= recovery) {
+        stateKO = false
+        currentHP = maxHp
+      }
     }
-  }*/
-
-  def increaseChapters(): Unit = {
-    chapters += 1
   }
-  def startTurn(player: PlayerCharacter): Unit = {
-    player.rollDice()
-    player.increaseStars((chapters / 5) + 1)
-
-  }
-
 }
