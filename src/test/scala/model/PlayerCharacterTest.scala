@@ -17,8 +17,6 @@ class PlayerCharacterTest extends munit.FunSuite {
   private val attack = 1
   private val defense = 1
   private val evasion = 1
-  //private val randomNumberGenerator = new Random(11)
-  private val stars = 5
   private val victories = 0
   /* Add any other constants you need here... */
 
@@ -42,7 +40,6 @@ class PlayerCharacterTest extends munit.FunSuite {
       defense,
       evasion,
       randomNumberGenerator,
-      stars,
       victories
     )
     randomNumberGenerator = new Random(11)
@@ -55,7 +52,7 @@ class PlayerCharacterTest extends munit.FunSuite {
     assertEquals(character.attack, attack)
     assertEquals(character.defense, defense)
     assertEquals(character.evasion, evasion)
-    assertEquals(character.stars, stars)
+    //assertEquals(character.stars, stars)
     assertEquals(character.victories, victories)
   }
 
@@ -73,7 +70,7 @@ class PlayerCharacterTest extends munit.FunSuite {
   // are always the same for the same seed.
   test("A character should be able to roll a dice with a fixed seed") {
     val other = {
-      new PlayerCharacter(name, maxHp, currentHP, attack, defense, evasion, new Random(11), stars)
+      new PlayerCharacter(name, maxHp, currentHP, attack, defense, evasion, new Random(11))
     }
     for (_ <- 1 to 10) {
       assertEquals(character.rollDice(), other.rollDice())
@@ -81,13 +78,13 @@ class PlayerCharacterTest extends munit.FunSuite {
   }
 
   test("A character should be able to increased their stars counter") {
-    character.increaseStars(3)
-    assertEquals(character.stars, 8)
+    character.stars += 3
+    assertEquals(character.stars, 3)
   }
 
   test("A character should be able to decreased their stars counter") {
-    character.decreaseStars(3)
-    assertEquals(character.stars, 2)
+    character.stars -= 3
+    assertEquals(character.stars, 0)
   }
 
   test("A character should be able to increased their victories counter to 1 if the opponent is a WildUnit") {
@@ -125,7 +122,7 @@ class PlayerCharacterTest extends munit.FunSuite {
 
   test("A character in KO state recovers if the dice result is greater than or equal to 6 - chapters") {
     character.knockOut()
-    character.setChapters(5)
+    character.chapters_(5)
     character.recovery()
     assertEquals(character.currentHP, maxHp)
   }

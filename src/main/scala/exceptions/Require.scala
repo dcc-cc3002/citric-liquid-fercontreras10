@@ -18,20 +18,8 @@ package exceptions
  * @author [[https://github.com/joelriquelme/ Joel Riquelme P.]]
  * @author [[https://github.com/r8vnhill/ Ignacio Slater M.]]
  * @author [[https://github.com/Seivier/ Vicente González B.]]
- * @author [[https://github.com/fercontreras10/ Fernanda Contreras C.]]
  */
 object Require {
-
-  /**
-   *
-   */
-
-  final case class Requirement (value: Int, name: String) {
-    def ValidationMethod():Int = {
-      if (value >= 0) value
-      else throw new InvalidStatException(s"$name should be at least 0 but was $value")
-    }
-  }
 
   /**
    * Represents and validates a game statistic with an associated name.

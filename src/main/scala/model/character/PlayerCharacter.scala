@@ -32,7 +32,7 @@ import scala.util.Random
   * @param evasion The player's skill to completely avoid certain attacks.
   * @param randomNumberGenerator A utility to generate random numbers. Defaults to a new `Random`
   *                              instance.
-  * @param stars The number of stars the player has obtained. Defaults to 0.
+  * //@param stars The number of stars the player has obtained. Defaults to 0.
   *
   * @author [[https://github.com/danielRamirezL/ Daniel Ramírez L.]]
   * @author [[https://github.com/joelriquelme/ Joel Riquelme P.]]
@@ -47,18 +47,42 @@ class PlayerCharacter(val name: String,
                       val defense: Int,
                       val evasion: Int,
                       val randomNumberGenerator: Random = new Random(),
-                      var stars: Int = 0,
                       var victories: Int = 0,
                       var stateKO: Boolean = false) {
 
   var normaLevel: NormaType = Norma.Norma1
+
+  /** The current stars of the player. Default value*/
+  private var _stars: Int = 0
+
+  /** Return the current stars of the player. */
+  def stars : Int = _stars
+
+  /** Set the current stars of the player.
+   *
+   * @param value the new stars of the player.
+   */
+  def stars_=(value: Int): Unit = {
+    if (value < 0) {
+      _stars = 0
+    }
+    else {
+      _stars = value
+    }
+  }
+
+  /** The current level of the player. Default value*/
   private var _chapters: Int = 1
 
+  /** Return the current level of the player. */
   private def chapters: Int = _chapters
 
-  def setChapters(value: Int): Unit = {
-    _chapters = value
-  }
+  /** Set the current level of the player.
+   *
+   * @param value the new level of the player.
+   */
+  def chapters_(value: Int): Unit = _chapters = value
+
 
   /** Rolls a dice and returns a value between 1 to 6.
    *
@@ -68,21 +92,21 @@ class PlayerCharacter(val name: String,
     randomNumberGenerator.nextInt(6) + 1
   }
 
-  /** Increases the number of stars.
+/*  /** Increases the number of stars.
    *
    * @param amount the amount of stars to increase.
    */
   def increaseStars(amount: Int): Unit = {
     stars += amount
-  }
+  }*/
 
-  /** Decreases the number of stars.
+ /* /** Decreases the number of stars.
    *
    * @param amount the amount of stars to decrease.
    */
   def decreaseStars(amount: Int): Unit = {
     stars -= amount
-  }
+  }*/
 
   /** Victories are increased when a combat is won.
    * The amount increased depends on the opponent defeated.
