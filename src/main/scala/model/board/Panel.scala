@@ -1,5 +1,7 @@
 package cl.uchile.dcc.citric
-package model
+package model.board
+
+import model.character.PlayerCharacter
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -12,7 +14,7 @@ import scala.collection.mutable.ArrayBuffer
   * structures.
   *
   * @author [[https://github.com/r8vnhill Ignacio Slater M.]]
-  * @author [[https://github.com/YOUR-USERNAME YOUR NAME]]
+  * @author [[https://github.com/fercontreras10]]
   */
 trait Panel {
 
@@ -38,7 +40,9 @@ trait Panel {
     *
     * @param player The player character to add to this panel.
     */
-  def addCharacter(player: PlayerCharacter): Unit
+  def addCharacter(player: PlayerCharacter): Unit = {
+    characters += player
+  }
 
   /** Removes a character from the list of characters currently on this panel.
     *
@@ -46,5 +50,16 @@ trait Panel {
     *
     * @param player The player character to remove from this panel.
     */
-  def removeCharacter(player: PlayerCharacter): Unit
+  def removeCharacter(player: PlayerCharacter): Unit = {
+    characters -= player
+  }
+
+  /** Applies the effect of this panel to a character.
+    *
+    * This method is invoked when a character lands on this panel.
+    *
+    * @param player The player character to apply the effect to.
+    */
+  def apply(player: PlayerCharacter): Unit
+
 }
