@@ -179,14 +179,43 @@ class PlayerCharacter(val name: String,
     }
   }
 
-  /**  */
-  //def attackCombat(): = {
-  //}
 
-  //def defendCombat(): ={
-   // defense -= 1
-  //}
+   /*
+  def attackCombat() = {
+    if (stateKO) {
+      throw new Exception("You can't attack a character that is already out of combat")
+    }
+    else { //attack and roll dice
+      val roll = rollDice()
+      val damage = attack + roll //dice adds to the attack
+      damage //return damage
+    }
+  }
 
- // def evadeCombat(): ={
- // }
+  def defendCombat( ): = {
+    if (!stateKO) {
+      val roll = rollDice()
+      val defenseRoll = defense + rollDice()
+      val atk = atk + rollDice()
+      val damage = roll //dice adds to the defense
+      val attack = math.max(1, atk - ( defenseRoll + defense))
+      currentHp -= math.max(0, attack)
+    }
+  }
+
+  def evadeCombat(): = {
+    if (!stateKO) {
+      val eva = eva + rollDice()
+      val atk = atk + rollDice()
+      if (eva > atk) {
+        val damage = 0
+      }
+      else {
+        val damage = atk
+        currentHp -= damage
+      }
+    }
+  }
+  */
+
 }
