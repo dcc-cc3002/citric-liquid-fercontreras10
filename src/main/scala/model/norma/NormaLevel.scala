@@ -6,10 +6,10 @@ package model.norma
  *
  * @author [[https://github.com/fercontreras10]]
  */
-trait NormaType {
+trait NormaLevel {
 
-    /** The norma id */
-    val normaId: Int
+    /** The norma level */
+    val level: Int
 
     /** The number of stars required to reach this norma. */
     val stars: Int

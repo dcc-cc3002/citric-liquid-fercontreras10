@@ -54,4 +54,12 @@ trait Panel {
     characters -= player
   }
 
+  /** Applies the effect of this panel to a character.
+    *
+    * This method is invoked when a character lands on this panel.
+    *
+    * @param player The player character to apply the effect to.
+    */
+  def apply(player: PlayerCharacter): Unit
+
 }

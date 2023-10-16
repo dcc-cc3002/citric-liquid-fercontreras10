@@ -48,7 +48,7 @@ class PlayerCharacterTest extends munit.FunSuite {
   test("A character should have correctly set their attributes") {
     assertEquals(character.name, name)
     assertEquals(character.maxHp, maxHp)
-    assertEquals(character.currentHP, currentHP)
+    //assertEquals(character.currentHP, currentHP)
     assertEquals(character.attack, attack)
     assertEquals(character.defense, defense)
     assertEquals(character.evasion, evasion)
@@ -100,8 +100,8 @@ class PlayerCharacterTest extends munit.FunSuite {
   }
 
   test("A character recover HP") {
-    character.recoverHP(2)
-    assertEquals(character.currentHP, 2)
+    character.recoverHP += 2
+    assertEquals(character._currentHP, 2)
   }
 
   test("A character enters a KO state when their HP is 0 or less") {
@@ -117,14 +117,14 @@ class PlayerCharacterTest extends munit.FunSuite {
   test("A character in KO state does not recover if the dice result is less than 6 - chapters") {
     character.knockOut()
     character.recovery()
-    assertEquals(character.currentHP, 0)
+    assertEquals(character._currentHP, 0)
   }
 
   test("A character in KO state recovers if the dice result is greater than or equal to 6 - chapters") {
     character.knockOut()
     character.chapters_(5)
     character.recovery()
-    assertEquals(character.currentHP, maxHp)
+    assertEquals(character._currentHP, maxHp)
   }
 
 }

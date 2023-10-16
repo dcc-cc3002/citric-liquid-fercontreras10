@@ -1,13 +1,13 @@
 package cl.uchile.dcc.citric
 package model.character
 
-class WildUnit (val name: String,
+abstract class WildUnit (val name: String,
                 val maxHp: Int,
                 var currentHP: Int,
                 val attack: Int,
                 val defense: Int,
                 val evasion: Int,
-                var stars: Int = 0) {
+                var stars: Int = 0) extends Entity {
 
   /** Increases the number of stars the WildUnit has by the given amount.
    *

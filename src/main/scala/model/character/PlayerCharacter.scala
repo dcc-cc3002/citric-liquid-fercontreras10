@@ -1,7 +1,7 @@
 package cl.uchile.dcc.citric
 package model.character
 
-import model.norma.{Norma, NormaType}
+import model.norma.NormaLevel
 
 import scala.util.Random
 
@@ -42,15 +42,34 @@ import scala.util.Random
   */
 class PlayerCharacter(val name: String,
                       val maxHp: Int,
-                      var currentHP: Int,
                       val attack: Int,
                       val defense: Int,
                       val evasion: Int,
                       val randomNumberGenerator: Random = new Random(),
                       var victories: Int = 0,
-                      var stateKO: Boolean = false) {
+                      var stateKO: Boolean = false) extends Entity {
 
-  var normaLevel: NormaType = Norma.Norma1
+  var normaLevel: NormaLevel = new Norma(1, 10, 0)
+
+
+  /** The current health points of the player. Default value */
+  private var _currentHP: Int = maxHp
+
+  /** Return the current health points of the player. */
+  def currentHp: Int = _currentHP
+
+  /** Set the current health points of the player.
+   *
+   * @param value the new health points of the player.
+   */
+  def currentHp_=(value: Int): Unit = {
+    if (value < 0) {
+      _currentHP = 0
+    }
+    else {
+      _currentHP = value
+    }
+  }
 
   /** The current stars of the player. Default value*/
   private var _stars: Int = 0
@@ -130,14 +149,14 @@ class PlayerCharacter(val name: String,
    * @param hp the amount of health points to recover.
    */
   def recoverHP(hp: Int): Unit = {
-    currentHP += hp
+    _currentHP += hp
   }
 
   /** KO is a method that is called when a player's health points are 0 or less.
    * It changes the state of the player to KO and calls the recovery method.
    */
   def knockOut(): Unit = {
-    if (currentHP <= 0) {// to check: or just == 0?
+    if (_currentHP <= 0) {// to check: or just == 0?
       stateKO = true
       recovery()
     }
@@ -155,8 +174,19 @@ class PlayerCharacter(val name: String,
       val recovery = 6 - chapters
       if (diceResult >= recovery) {
         stateKO = false
-        currentHP = maxHp
+        _currentHP = maxHp
       }
     }
   }
+
+  /**  */
+  //def attackCombat(): = {
+  //}
+
+  //def defendCombat(): ={
+   // defense -= 1
+  //}
+
+ // def evadeCombat(): ={
+ // }
 }

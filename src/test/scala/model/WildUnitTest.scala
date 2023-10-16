@@ -1,7 +1,7 @@
 package cl.uchile.dcc.citric
 package model
 
-import model.character.WildUnit
+import model.character.{Chicken, WildUnit}
 
 class WildUnitTest extends munit.FunSuite {
 
@@ -11,19 +11,17 @@ class WildUnitTest extends munit.FunSuite {
   private val attack = -1
   private val defense = -1
   private val evasion = +1
-  private val stars = 5
 
   private var enemy: WildUnit = _
 
   override def beforeEach(context: BeforeEach): Unit = {
-    enemy = new WildUnit(
+    enemy = new Chicken(
       name,
       maxHp,
       currentHP,
       attack,
       defense,
-      evasion,
-      stars
+      evasion
     )
   }
 
@@ -34,7 +32,6 @@ class WildUnitTest extends munit.FunSuite {
     assertEquals(enemy.attack, attack)
     assertEquals(enemy.defense, defense)
     assertEquals(enemy.evasion, evasion)
-    assertEquals(enemy.stars, stars)
   }
 
   test("A WildUnit should be able to increased their stars counter") {

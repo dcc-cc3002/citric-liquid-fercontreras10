@@ -1,7 +1,7 @@
 package cl.uchile.dcc.citric
 package model.board
 
-import model.character.{PlayerCharacter, WildUnit}
+import model.character.{Chicken, PlayerCharacter, RoboBall, Seagull, WildUnit}
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -41,9 +41,9 @@ class EncounterPanel() extends Panel {
    *
    */
   private val enemies: Array[WildUnit] = Array(
-    new WildUnit("Chicken", 3, 3, -1, -1, +1),
-    new WildUnit("Robo ball", 3, 3, -1, +1, -1),
-    new WildUnit("Seagull", 3, 3, +1, -1, -1)
+    new Chicken(),
+    new RoboBall(),
+    new Seagull()
   )
 
   def addWildUnit(): Unit = {

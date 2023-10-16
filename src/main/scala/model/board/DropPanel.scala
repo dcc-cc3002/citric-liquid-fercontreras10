@@ -30,6 +30,13 @@ class DropPanel extends Panel {
    */
   override var nextPanels: ArrayBuffer[Panel] = ArrayBuffer()
 
+  /** apply implements the effect of this panel to a character.
+   *
+   */
+ def apply(player: PlayerCharacter): Unit = {
+    decreaseStars(player)
+  }
+
   /** Decreases the number of stars of the character that landed on this panel.
    *
    * This method is invoked when a character lands on this panel.
