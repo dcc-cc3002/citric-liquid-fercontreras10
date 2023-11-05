@@ -1,7 +1,6 @@
 package cl.uchile.dcc.citric
 package model.norma
 
-
 /** Represents .
  *
  * @author [[https://github.com/fercontreras10]]
