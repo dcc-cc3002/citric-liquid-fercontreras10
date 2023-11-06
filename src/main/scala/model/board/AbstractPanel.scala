@@ -28,22 +28,21 @@ abstract class AbstractPanel extends Panel{
     nextPanels -= panel
   }
 
-  /*def initiateCombat(player: PlayerCharacter): Unit = {
+  /*def startCombat(player: PlayerCharacter, startCombat: Boolean): Unit = {
     if (characters.nonEmpty) {
-      val playerChoice = "yes"
-      if (playerChoice == "yes") {
-        val opponent = characters.head
-        player.playerCombat(opponent, this)
-        if (opponent.stateKO) {
-          removeCharacter(opponent)
+      if (startCombat) {
+        val otherPlayers = characters.filter(_ != player)
+        if (otherPlayers.nonEmpty) {
+          val opponent = otherPlayers(scala.util.Random.nextInt(otherPlayers.length))
+          player.playerCombat(player, opponent)
+          if (opponent.stateKO) {
+            removeCharacter(opponent)
+          }
+          else if (player.stateKO) {
+            removeCharacter(player)
+          }
         }
       }
-      else {
-        //just apply panel effect
-      }
-    }
-    else {
-      // do not call initiate combat cause there is no one to fight, so create function outside
     }
   }*/
 

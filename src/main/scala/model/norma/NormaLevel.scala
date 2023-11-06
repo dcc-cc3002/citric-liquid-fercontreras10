@@ -1,7 +1,8 @@
 package cl.uchile.dcc.citric
 package model.norma
 
-/** Represents .
+/** Represents a norma level.
+ * It has a level, a number of stars and a number of victories.
  *
  * @author [[https://github.com/fercontreras10]]
  */

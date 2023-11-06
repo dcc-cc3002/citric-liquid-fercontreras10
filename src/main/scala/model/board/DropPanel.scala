@@ -23,8 +23,13 @@ class DropPanel extends AbstractPanel {
     player.stars -= diceRoll * player.normaLevel.level
   }
 
+  /** Applies the effect of the panel to the player that landed on it.
+   * For now the decision of starting a combat is made here and is set to true. */
   def apply(player: PlayerCharacter): Unit = {
     decreaseStars(player)
+    /*if (characters.length > 1) {
+      startCombat(player, startCombat = true)
+    }*/
   }
 
 }

@@ -77,8 +77,10 @@ trait Panel {
   /** A player can decide to initiate a combat when there's other player in a panel.
    *
    * This method is invoked when a characters lands on this panel and there's another player in it.
+   * The combat is initiated by the player that lands on the panel
+   * and is fought against a random player in the panel.
    *
    * //@param player The player character that initiates the combat.
    */
-  //def initiateCombat(player: PlayerCharacter): Unit
+  //def startCombat(player: PlayerCharacter, startCombat: Boolean): Unit
 }

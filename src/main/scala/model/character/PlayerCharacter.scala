@@ -60,8 +60,6 @@ class PlayerCharacter(private val _name: String,
                       private var _normaCheck: Boolean = false,
                       private var _turnSystem: TurnSystem) extends AbstractEntity {
 
-  /** The turn system of the game. */
-  //def turnSystem: TurnSystem = _turnSystem
   /** Sets the turn system of the player.
    *
    * @param newTurnSystem the new turn system of the player.
@@ -70,6 +68,7 @@ class PlayerCharacter(private val _name: String,
     _turnSystem = newTurnSystem
   }
 
+  /** Returns the current chapter of the player. */
   def chapters: Int = _turnSystem.chapters
 
   /** Returns the unique name of the player. */
@@ -99,10 +98,8 @@ class PlayerCharacter(private val _name: String,
   /** Returns the evasion of the player. */
   def evasion: Int = _evasion
 
-  /** Returns the random number generator of the player. */
-  //def randomNumberGenerator: Random = _randomNumberGenerator
   /** Rolls a dice and returns a value between 1 to 6. */
-  def rollDice(): Int = {
+  override def rollDice(): Int = {
     _randomNumberGenerator.nextInt(6) + 1
   }
 
@@ -182,16 +179,20 @@ class PlayerCharacter(private val _name: String,
   /** Returns the victories objective of the player. */
   def victoriesObjective: Boolean = _victoriesObjective
 
+  /** Choose stars as the objective */
   private[model] def chooseStarsObjective(): Unit = {
     _starsObjective = true
     _victoriesObjective = false
   }
 
+  /** Choose victories as the objective */
   private[model] def chooseVictoriesObjective(): Unit = {
     _starsObjective = false
     _victoriesObjective = true
   }
 
+  /** Returns true if the player has completed the norma objective, false otherwise.
+   */
   def hasCompletedNormaObjective: Boolean = {
     _normaCheck = false
     if (_starsObjective) {
@@ -219,32 +220,14 @@ class PlayerCharacter(private val _name: String,
     }
   }
 
-  /*def hasCompletedNormaObjective: Boolean = {
-    val requiredStars = _normaLevel.nextLevel().stars
-    val requiredVictories = _normaLevel.nextLevel().victories
-
-    if (_starsObjective) {
-      stars >= requiredStars
-    } else if (_victoriesObjective) {
-      victories >= requiredVictories
-    } else {
-      false
-    }
-  }*/
-
-  /*def hasCompletedNormaObjective: Boolean = {
-    if (_starsObjective || _victoriesObjective) {
-      val requiredStars = _normaLevel.requiredStarsForNextLevel
-      val requiredVictories = _normaLevel.requiredVictoriesForNextLevel
-      stars >= requiredStars || victories >= requiredVictories
-    } else {
-      false
-    }
-  }*/
-
   /** Returns the norma check of the player. */
   def normaCheck: Boolean = _normaCheck
 
+  /** Returns the norma level of the player.
+   *
+   * If the player has completed the norma objective, the norma level is increased by 1.
+   * It can't be skipped.
+   */
   def normaCheckLevelUp(): Unit = {
     if (hasCompletedNormaObjective) {
       _normaCheck = true
@@ -265,97 +248,98 @@ class PlayerCharacter(private val _name: String,
     normaLevel
   }
 
-  /*def normaCheckLevelUp(): Unit = {
-    if (hasCompletedNormaObjective) {
-      _normaCheck = true
-      val nextNormaLevel = _normaLevel.nextLevel()
+  /** Returns half of the stars of a player when a wild unit wins a combat.
+   */
+  def wildUnitWinCombat(wildUnit: WildUnit): Unit = {
+    val starsToTransfer = math.floor(stars / 2).toInt // Round down and convert to Int
+    stars -= starsToTransfer
+    wildUnit.stars += starsToTransfer
+  }
 
-      // Only update the norma level if there is a next level (level < 6).
-      if (nextNormaLevel.level <= 6) {
-        _normaLevel = nextNormaLevel
-      }
+  /** Returns half of the stars of a wild unit when a player wins a combat.
+   */
+  def playerWinCombat(player: PlayerCharacter, wildUnit: WildUnit): Unit = {
+    val starsToTransfer = math.floor(wildUnit.stars / 2).toInt // Round down and convert to Int
+    player.stars += starsToTransfer + wildUnit.baseStarQuantity
+    wildUnit.stars -= starsToTransfer
+  }
 
-      _starsObjective = false
-      _victoriesObjective = false
-    }
-    normaLevel
-  }*/
+  /** A combat can be against a player or a wild unit */
+  def combat(opponent: Entity): Unit = {
+  }
 
 
-  /*def combat(enemy: Entity): Unit = {
-    enemy match {
-      case player: PlayerCharacter => playerCombat(player)
+  /*private def playerWinCombatAgainstPlayer(opponent: PlayerCharacter): Unit = {
+    val starsToTransfer = math.floor(opponent.stars / 2).toInt // Round down and convert to Int
+    stars += starsToTransfer
+  }
+
+  def combat(opponent: Entity): Unit = {
+    opponent match {
+      case player: PlayerCharacter => playerCombat(this, player)
       case wildUnit: WildUnit => wildUnitCombat(wildUnit)
-      case _ => throw new Exception("Invalid combat")
     }
   }
 
-  def playerCombat(player1: PlayerCharacter, player2: PlayerCharacter ): Unit = {
-    if (!stateKO && !player1.stateKO && !player2.stateKO) {
-      val playerDiceRoll = rollDice()
-      val playerTotalAttack = this.attack + playerDiceRoll
-      player match {
-        case defend:PlayerCharacter => defend(player)
-        case evade:PlayerCharacter => evade(player)
-        case _ => throw new Exception("Invalid combat")
-      }
-      // Determine whether the player defends or dodges (you can add this logic)
-      // Roll a dice for the defending player (you can add this logic)
-      // Calculate damage based on your rules
-      // Update the currentHP of both players accordingly
-      // Check if the combat ends and update the victories and stars
-    }
-
-    if (player.evasion > this.attack) {
-      player.stars += 1
-    }
-    else {
-      player.currentHp -= this.attack - player.defense
-      if (player.currentHp <= 0) {
-        player.knockOut()
-        this.victories += 1
-        this.stars += player.stars
-        player.stars = 0
-      }
+  def decideCombat(opponent: Entity, defend: Boolean): Unit = {
+    opponent match {
+      case player: PlayerCharacter =>
+        if (defend) {
+          player.defendCombat()
+        }
+        else {
+          player.evadeCombat()
+        }
+      case wildUnit: WildUnit =>
+        if (defend) {
+          wildUnit.defendCombat()
+        }
+        else {
+          wildUnit.evadeCombat()
+        }
     }
   }
 
-  private def attack(): Unit = {
-    this.attack + this.rollDice()
+  private def combatRound(player1: PlayerCharacter, player2: PlayerCharacter): Unit = {
+    player1.attackCombat()
+    player2.defendCombat()
+    if (player2.currentHp <= 0) {
+      player1.increaseVictories("PlayerCharacter")
+      player2.playerWinCombatAgainstPlayer(player1)
+    }
   }
 
-  private def defend(): Unit = {
-    this.defense += 1
+  private[model] def playerCombat(player1: PlayerCharacter, player2: PlayerCharacter): Unit = {
+    if (!player1.stateKO && !player2.stateKO) {
+      combatRound(player1, player2)
+      combatRound(player2, player1)
+    }
   }
 
-  private def evade(): Unit = {
-    this.evasion += 1
-  }
 
   private def wildUnitCombat(wildUnit: WildUnit): Unit = {
-    // Implement player vs. Wild Unit combat logic here
     if (!stateKO) {
       // Roll dice for the player
       val playerDiceRoll = rollDice()
       // Calculate the player's total attack
       val playerTotalAttack = attack + playerDiceRoll
-      // Determine if the Wild Unit defends or dodges (you can add this logic)
-      // Roll a dice for the Wild Unit (you can add this logic)
-      // Calculate damage based on your rules
-      // Update the currentHP of the Wild Unit and the player accordingly
-      // Check if the combat ends and update the player's victories and stars
-    }
 
-    if (wildUnit.evasion > this.attack) {
-      wildUnit.stars += 1
-    } else {
-      wildUnit.currentHP -= this.attack - wildUnit.defense
-      if (wildUnit.currentHP <= 0) {
-        this.stars += wildUnit.stars
+      // Determine if the Wild Unit defends or dodges (you can add this logic)
+      val wildUnitDefends = scala.util.Random.nextBoolean()
+
+      if (wildUnitDefends) {
+        wildUnit.defendCombat()
+      }
+      else {
+        wildUnit.evadeCombat()
+      }
+
+      // Check if the Wild Unit's current HP is reduced to 0
+      if (wildUnit.currentHp <= 0) {
+        stars += wildUnit.stars
         wildUnit.stars = 0
+        increaseVictories("WildUnit")
       }
     }
   }*/
-
-
 }

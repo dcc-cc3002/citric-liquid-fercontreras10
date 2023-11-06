@@ -1,6 +1,23 @@
 package cl.uchile.dcc.citric
 package model.character
 
+/** The WildUnit class is an abstract class that represent an enemy in the game.
+ *
+ * A WildUnit is a type of Entity that can be found in the game.
+ * There's a total of 3 WildUnits in the game: RoboBall, Seagull and Chicken.
+ * They have fixed stats for each wild unit (hp, atk, def, eva) and a base star quantity.
+ *
+ * @param _name the unique name of the WildUnit.
+ * @param _maxHp the maximum hit points of the WildUnit.
+ * @param _currentHp the current hit points of the WildUnit.
+ * @param _attack the attack of the WildUnit.
+ * @param _defense the defense of the WildUnit.
+ * @param _evasion the evasion of the WildUnit.
+ * @param _stateVisible the state of the WildUnit.
+ * @param _stars the stars of the WildUnit.
+ *
+ * @author [[https://github.com/fercontreras10/ Fernanda Contreras C.]]
+ */
 abstract class WildUnit(private val _name: String,
                         private val _maxHp: Int,
                         private var _currentHp: Int,
@@ -8,7 +25,7 @@ abstract class WildUnit(private val _name: String,
                         private val _defense: Int,
                         private val _evasion: Int,
                         private var _stateVisible: Boolean = false,
-                        private var _stars: Int = 0) extends Entity {
+                        private var _stars: Int = 0) extends AbstractEntity {
 
   /** Returns the unique name of the WildUnit. */
   def name: String = _name

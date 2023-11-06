@@ -13,7 +13,8 @@ class PlayerCharacterTest extends munit.FunSuite {
   tests, so you can change them in a single place.
   This will make your tests more readable, easier to maintain, and less error-prone.
   */
-  private val name = "testPlayer"
+  private val name1 = "testPlayer"
+  //private val name2 = "testPlayer2"
   private val maxHp = 10
   private val currentHp = 0
   private val attack = 1
@@ -36,6 +37,7 @@ class PlayerCharacterTest extends munit.FunSuite {
   to worry about the state of the object between tests.
   */
   private var character: PlayerCharacter = _  // <- x = _ is the same as x = null
+  //private var otherCharacter: PlayerCharacter = _
   private var turnSystem: TurnSystem = _
   /* Add any other variables you need here... */
   private var randomNumberGenerator = new Random(11)
@@ -43,7 +45,7 @@ class PlayerCharacterTest extends munit.FunSuite {
   // This method is executed before each `test(...)` method.
   override def beforeEach(context: BeforeEach): Unit = {
     character = new PlayerCharacter(
-      name,
+      name1,
       maxHp,
       currentHp,
       attack,
@@ -59,12 +61,30 @@ class PlayerCharacterTest extends munit.FunSuite {
       normaCheck,
       turnSystem
     )
+    /*otherCharacter = new PlayerCharacter(
+      name2,
+      maxHp,
+      currentHp,
+      attack,
+      defense,
+      evasion,
+      randomNumberGenerator,
+      stateKO,
+      stars,
+      victories,
+      normaLevel,
+      starsObjective,
+      victoriesObjective,
+      normaCheck,
+      turnSystem
+    )*/
     randomNumberGenerator = new Random(11)
     turnSystem = new TurnSystem(List(character))
   }
 
   test("A character should have correctly set their attributes") {
-    assertEquals(character.name, name)
+    assertEquals(character.name, name1)
+    //assertEquals(character.name, name2)
     assertEquals(character.maxHp, maxHp)
     assertEquals(character.currentHp, currentHp)
     assertEquals(character.attack, attack)
@@ -90,7 +110,7 @@ class PlayerCharacterTest extends munit.FunSuite {
   // are always the same for the same seed.
   test("A character should be able to roll a dice with a fixed seed") {
     val other =
-      new PlayerCharacter(name, maxHp, currentHp, attack, defense, evasion, new Random(11), stateKO, stars, victories, normaLevel, starsObjective, victoriesObjective, normaCheck, turnSystem)
+      new PlayerCharacter(name1, maxHp, currentHp, attack, defense, evasion, new Random(11), stateKO, stars, victories, normaLevel, starsObjective, victoriesObjective, normaCheck, turnSystem)
     for (_ <- 1 to 10) {
       assertEquals(character.rollDice(), other.rollDice())
     }
@@ -341,88 +361,33 @@ class PlayerCharacterTest extends munit.FunSuite {
     assertEquals(character.hasCompletedNormaObjective, false)
   }
 
-  //-------------------- Norma1 Tests --------------------
-
-  /*test("Norma1 should return correct values for next level requirements") {
-    val norma1 = Norma1()
-    assert(norma1.requiredStarsForNextLevel == 10)
-    assert(norma1.requiredVictoriesForNextLevel == 1)
+  test("A character should be able to calculate their attack") {
+    assertEquals(character.attackCombat(), 2)
   }
 
-  test("Norma1 should return next level as Norma2") {
-    val norma1 = Norma1()
-    val nextLevel = norma1.nextLevel()
-    assert(nextLevel.isInstanceOf[Norma2])
+  test("defendCombat should calculate damage and apply it to currentHp") {
+    assertEquals(character.currentHp, 0)
+    assertEquals(character.defendCombat(), 1)
   }
 
-  //-------------------- Norma2 Tests --------------------
-
-  test("Norma2 should return correct values for next level requirements") {
-    val norma2 = Norma2()
-    assert(norma2.requiredStarsForNextLevel == 30)
-    assert(norma2.requiredVictoriesForNextLevel == 3)
+  test("evadeCombat should calculate damage, apply it if not evading, and return damage") {
+    assertEquals(character.currentHp, 0)
+    assertEquals(character.evadeCombat(), 0)
   }
 
-  test("Norma2 should return next level as Norma3") {
-    val norma2 = Norma2()
-    val nextLevel = norma2.nextLevel()
-    assert(nextLevel.isInstanceOf[Norma3])
+  test("When a wild unit wins a combat, the player should transfer half of their stars") {
+    character.stars = 10
+    val wildUnit = new Chicken
+    character.wildUnitWinCombat(wildUnit)
+    assertEquals(character.stars, 5)
   }
 
-  //-------------------- Norma3 Tests --------------------
-
-  test("Norma3 should return correct values for next level requirements") {
-    val norma3 = Norma3()
-    assert(norma3.requiredStarsForNextLevel == 70)
-    assert(norma3.requiredVictoriesForNextLevel == 6)
+  test("When a player wins a combat, the wild unit should transfer half of their stars + their bono stars") {
+    character.stars = 10
+    val wildUnit = new Chicken
+    character.playerWinCombat(character, wildUnit)
+    assertEquals(character.stars, 14)
+    assertEquals(wildUnit.stars, 3)
   }
-
-  test("Norma3 should return next level as Norma4") {
-    val norma3 = Norma3()
-    val nextLevel = norma3.nextLevel()
-    assert(nextLevel.isInstanceOf[Norma4])
-  }
-
-  //-------------------- Norma4 Tests --------------------
-
-  test("Norma4 should return correct values for next level requirements") {
-    val norma4 = Norma4()
-    assert(norma4.requiredStarsForNextLevel == 120)
-    assert(norma4.requiredVictoriesForNextLevel == 10)
-  }
-
-  test("Norma4 should return next level as Norma5") {
-    val norma4 = Norma4()
-    val nextLevel = norma4.nextLevel()
-    assert(nextLevel.isInstanceOf[Norma5])
-  }
-
-  //-------------------- Norma5 Tests --------------------
-
-  test("Norma5 should return correct values for next level requirements") {
-    val norma5 = Norma5()
-    assert(norma5.requiredStarsForNextLevel == 200)
-    assert(norma5.requiredVictoriesForNextLevel == 14)
-  }
-
-  test("Norma5 should return next level as Norma6") {
-    val norma5 = Norma5()
-    val nextLevel = norma5.nextLevel()
-    assert(nextLevel.isInstanceOf[Norma6])
-  }
-
-  //-------------------- Norma6 Tests --------------------
-
-  test("Norma6 should return correct values for next level requirements") {
-    val norma6 = Norma6()
-    assert(norma6.requiredStarsForNextLevel == 0)
-    assert(norma6.requiredVictoriesForNextLevel == 0)
-  }
-
-  test("Norma6 should return next level as Norma6") {
-    val norma6 = Norma6()
-    val nextLevel = norma6.nextLevel()
-    assert(nextLevel.isInstanceOf[Norma6])
-  }*/
 
 }

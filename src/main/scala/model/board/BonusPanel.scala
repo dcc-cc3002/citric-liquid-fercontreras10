@@ -23,8 +23,12 @@ class BonusPanel extends AbstractPanel {
     player.stars += Math.min(diceRoll * player.normaLevel.level, diceRoll * 3)
   }
 
+  /** Applies the effect of the panel to the player that landed on it.
+   * For now the decision of starting a combat is made here and is set to true. */
   def apply(player: PlayerCharacter): Unit = {
     increaseStars(player)
+    /*if (characters.length > 1) {
+      startCombat(player, startCombat = true)
+    }*/
   }
-
 }

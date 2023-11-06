@@ -16,7 +16,8 @@ class PanelTest extends munit.FunSuite {
   tests, so you can change them in a single place.
   This will make your tests more readable, easier to maintain, and less error-prone.
   */
-  private val name = "testPlayer"
+  private val name1 = "testPlayer"
+  private val name2 = "testPlayer2"
   private val maxHp = 10
   private val currentHp = 10
   private val attack = 1
@@ -39,6 +40,7 @@ class PanelTest extends munit.FunSuite {
   to worry about the state of the object between tests.
   */
   private var character: PlayerCharacter = _ // <- x = _ is the same as x = null
+  private var otherCharacter: PlayerCharacter = _
   private var neutralPanel: NeutralPanel = _
   private var homePanel: HomePanel = _
   private var bonusPanel: BonusPanel = _
@@ -51,7 +53,24 @@ class PanelTest extends munit.FunSuite {
   // This method is executed before each `test(...)` method.
   override def beforeEach(context: BeforeEach): Unit = {
     character = new PlayerCharacter(
-      name,
+      name1,
+      maxHp,
+      currentHp,
+      attack,
+      defense,
+      evasion,
+      randomNumberGenerator,
+      stateKO,
+      stars,
+      victories,
+      normaLevel,
+      starsObjective,
+      victoriesObjective,
+      normaCheck,
+      turnSystem
+    )
+    otherCharacter = new PlayerCharacter(
+      name2,
       maxHp,
       currentHp,
       attack,
@@ -77,7 +96,8 @@ class PanelTest extends munit.FunSuite {
   }
 
   test("A character should have correctly set their attributes") {
-    assertEquals(character.name, name)
+    assertEquals(character.name, name1)
+    //assertEquals(character.name, name2)
     assertEquals(character.maxHp, maxHp)
     assertEquals(character.currentHp, currentHp)
     assertEquals(character.attack, attack)
@@ -132,6 +152,14 @@ class PanelTest extends munit.FunSuite {
     neutralPanel.apply(character)
     assertEquals(neutralPanel.characters, ArrayBuffer.empty[PlayerCharacter])
   }
+
+  /*test("A character can start a combat with another character in a neutral panel") {
+    neutralPanel.addCharacter(character)
+    neutralPanel.addCharacter(otherCharacter)
+    neutralPanel.apply(character)
+    assertEquals(neutralPanel.characters, ArrayBuffer.empty[PlayerCharacter])
+
+  }*/
 
   test("A character is the owner of a home panel at the beginning of the game") {
     homePanel.addCharacter(character)
