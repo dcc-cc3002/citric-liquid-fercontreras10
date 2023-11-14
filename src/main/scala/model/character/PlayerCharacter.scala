@@ -264,16 +264,12 @@ class PlayerCharacter(private val _name: String,
     wildUnit.stars -= starsToTransfer
   }
 
-  /** A combat can be against a player or a wild unit */
-  def combat(opponent: Entity): Unit = {
-  }
-
-
-  /*private def playerWinCombatAgainstPlayer(opponent: PlayerCharacter): Unit = {
+  private def playerWinCombatAgainstPlayer(opponent: PlayerCharacter): Unit = {
     val starsToTransfer = math.floor(opponent.stars / 2).toInt // Round down and convert to Int
     stars += starsToTransfer
   }
 
+  /** A combat can be against a player or a wild unit */
   def combat(opponent: Entity): Unit = {
     opponent match {
       case player: PlayerCharacter => playerCombat(this, player)
@@ -341,5 +337,6 @@ class PlayerCharacter(private val _name: String,
         increaseVictories("WildUnit")
       }
     }
-  }*/
+  }
+
 }

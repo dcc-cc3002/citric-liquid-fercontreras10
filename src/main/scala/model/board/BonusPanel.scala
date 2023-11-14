@@ -27,8 +27,8 @@ class BonusPanel extends AbstractPanel {
    * For now the decision of starting a combat is made here and is set to true. */
   def apply(player: PlayerCharacter): Unit = {
     increaseStars(player)
-    /*if (characters.length > 1) {
+    if (characters.length > 1) {
       startCombat(player, startCombat = true)
-    }*/
+    }
   }
 }

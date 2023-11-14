@@ -40,9 +40,9 @@ class HomePanel(private val _homePanelOwner: PlayerCharacter) extends AbstractPa
   def apply(player: PlayerCharacter): Unit = {
     activateHomePanel(player)
     activate = false
-    /*if (characters.length > 1) {
+    if (characters.length > 1) {
       startCombat(player, startCombat = true)
-    }*/
+    }
   }
 
 }

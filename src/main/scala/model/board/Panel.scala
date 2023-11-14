@@ -82,5 +82,5 @@ trait Panel {
    *
    * //@param player The player character that initiates the combat.
    */
-  //def startCombat(player: PlayerCharacter, startCombat: Boolean): Unit
+  def startCombat(player: PlayerCharacter, startCombat: Boolean): Unit
 }

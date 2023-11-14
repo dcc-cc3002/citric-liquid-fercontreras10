@@ -28,7 +28,7 @@ abstract class AbstractPanel extends Panel{
     nextPanels -= panel
   }
 
-  /*def startCombat(player: PlayerCharacter, startCombat: Boolean): Unit = {
+  def startCombat(player: PlayerCharacter, startCombat: Boolean): Unit = {
     if (characters.nonEmpty) {
       if (startCombat) {
         val otherPlayers = characters.filter(_ != player)
@@ -44,6 +44,6 @@ abstract class AbstractPanel extends Panel{
         }
       }
     }
-  }*/
+  }
 
 }

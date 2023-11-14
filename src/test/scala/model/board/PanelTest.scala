@@ -97,7 +97,7 @@ class PanelTest extends munit.FunSuite {
 
   test("A character should have correctly set their attributes") {
     assertEquals(character.name, name1)
-    //assertEquals(character.name, name2)
+    assertEquals(otherCharacter.name, name2)
     assertEquals(character.maxHp, maxHp)
     assertEquals(character.currentHp, currentHp)
     assertEquals(character.attack, attack)

@@ -8,7 +8,7 @@ package model.character
  *
  *  @constructor creates a new RoboBall with fixed stats and a base star quantity.
  *
- *  */
+ */
 class RoboBall extends WildUnit("Robo Ball", 3, 3, -1, +1, -1, false,2) {
 
   val baseStarQuantity: Int = 2
