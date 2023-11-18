@@ -14,7 +14,10 @@ purpose is to serve as an educational tool, teaching foundational programming co
 The remainder of this README is yours to complete. Take this opportunity to describe your
 contributions, the design decisions you've made, and any other information you deem necessary.
 
-### Tarea 2
+### Tarea 3
+
+### Diagrama de estados
+![Diagrama de estados](docs/diagrama-estados.png)
 
 ### Implemented functionalities
 The functionalities implemented were the following:
