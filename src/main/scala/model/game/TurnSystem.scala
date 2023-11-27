@@ -44,7 +44,7 @@ class TurnSystem(players: List[PlayerCharacter]) {
   }
 
   /** Returns the current player. */
-  private[model] def currentPlayer: PlayerCharacter = playerOrder(currentPlayerIndex)
+  def currentPlayer: PlayerCharacter = playerOrder(currentPlayerIndex)
 
   /** Adds stars to the player when their turn start.
    *
