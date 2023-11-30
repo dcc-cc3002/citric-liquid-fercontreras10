@@ -7,7 +7,7 @@ import model.game.TurnSystem
 
 class GameController {
 
-  private val state: GameState = _
+  //private val state: GameState = _
   private val turnSystem: TurnSystem = new TurnSystem(List[PlayerCharacter]())
 
   def startGame(): Unit = {
