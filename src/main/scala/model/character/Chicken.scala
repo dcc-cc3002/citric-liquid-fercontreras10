@@ -11,5 +11,11 @@ package model.character
  */
 class Chicken extends WildUnit("Chicken", 3, 3, -1, -1, +1, false,3) {
 
+  /** The base star quantity of the Chicken.
+   *
+   *  @return the base star quantity of the Chicken.
+   */
   val baseStarQuantity: Int = 3
+
+
 }

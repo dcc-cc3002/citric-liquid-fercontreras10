@@ -4,6 +4,8 @@ package model.character
 import model.game.TurnSystem
 import model.norma._
 
+import scalafx.scene.paint.Color
+
 import scala.util.Random
 
 /** The `PlayerCharacter` class represents a character or avatar in the game, encapsulating
@@ -27,6 +29,7 @@ import scala.util.Random
  * generation behaviors are desired.
  *
  * @param _name The name of the player. This is an identifier and should be unique.
+ * @param _color The color of the player. This is used to identify the player in the game.
  * @param _maxHp The maximum health points a player can have. It represents the player's endurance.
  * @param _currentHP The current health points of the player. Default value is the maximum health points.
  * @param _attack The player's capability to deal damage to opponents.
@@ -45,6 +48,7 @@ import scala.util.Random
  * @author [[https://github.com/fercontreras10/ Fernanda Contreras C.]]
  */
 class PlayerCharacter(private val _name: String,
+                      private val _color: Color,
                       private val _maxHp: Int,
                       private var _currentHP: Int,
                       private val _attack: Int,
@@ -73,6 +77,9 @@ class PlayerCharacter(private val _name: String,
 
   /** Returns the unique name of the player. */
   def name: String = _name
+
+  /** Returns the color of the player. */
+  def color: Color = _color
 
   /** Returns the maximum hit points of the player. */
   def maxHp: Int = _maxHp
@@ -153,7 +160,7 @@ class PlayerCharacter(private val _name: String,
    * @param newVictories the new victories of the player.
    */
   def victories_=(newVictories: Int): Unit = {
-    _victories = Math.max(0, newVictories)  // TODO: seems like this is not needed, cause victories are never decreased
+    _victories = Math.max(0, newVictories)
   }
   /** Victories are increased when a combat is won.
    * The amount increased depends on the opponent defeated.
@@ -248,23 +255,27 @@ class PlayerCharacter(private val _name: String,
     normaLevel
   }
 
-  /** Returns half of the stars of a player when a wild unit wins a combat.
-   */
+  /** Returns true if the player has reached norma 6, false otherwise. */
+  def hasReachedNorma6: Boolean = {
+    _normaLevel.level == 6
+  }
+
+  /** Returns half of the stars of a player when a wild unit wins a combat. */
   def wildUnitWinCombat(wildUnit: WildUnit): Unit = {
     val starsToTransfer = math.floor(stars / 2).toInt // Round down and convert to Int
     stars -= starsToTransfer
     wildUnit.stars += starsToTransfer
   }
 
-  /** Returns half of the stars of a wild unit when a player wins a combat.
-   */
+  /** Returns half of the stars of a wild unit when a player wins a combat. */
   def playerWinCombat(player: PlayerCharacter, wildUnit: WildUnit): Unit = {
     val starsToTransfer = math.floor(wildUnit.stars / 2).toInt // Round down and convert to Int
     player.stars += starsToTransfer + wildUnit.baseStarQuantity
     wildUnit.stars -= starsToTransfer
   }
 
-  private def playerWinCombatAgainstPlayer(opponent: PlayerCharacter): Unit = {
+  /** Returns half of the stars of a player when a player wins a combat. */
+  private[model] def playerWinCombatAgainstPlayer(opponent: PlayerCharacter): Unit = {
     val starsToTransfer = math.floor(opponent.stars / 2).toInt // Round down and convert to Int
     stars += starsToTransfer
   }
@@ -277,6 +288,7 @@ class PlayerCharacter(private val _name: String,
     }
   }
 
+  /** A combat can be against a player or a wild unit */
   def decideCombat(opponent: Entity, defend: Boolean): Unit = {
     opponent match {
       case player: PlayerCharacter =>
@@ -296,6 +308,7 @@ class PlayerCharacter(private val _name: String,
     }
   }
 
+  /** A combat can be against a player or a wild unit, a player attacks, the other defends */
   private def combatRound(player1: PlayerCharacter, player2: PlayerCharacter): Unit = {
     player1.attackCombat()
     player2.defendCombat()
@@ -305,6 +318,7 @@ class PlayerCharacter(private val _name: String,
     }
   }
 
+  /** A combat can be against a player or a wild unit, a player attacks, the other defends */
   private[model] def playerCombat(player1: PlayerCharacter, player2: PlayerCharacter): Unit = {
     if (!player1.stateKO && !player2.stateKO) {
       combatRound(player1, player2)
@@ -312,14 +326,9 @@ class PlayerCharacter(private val _name: String,
     }
   }
 
-
+  /** Wild unit combat */
   private def wildUnitCombat(wildUnit: WildUnit): Unit = {
     if (!stateKO) {
-      // Roll dice for the player
-      val playerDiceRoll = rollDice()
-      // Calculate the player's total attack
-      val playerTotalAttack = attack + playerDiceRoll
-
       // Determine if the Wild Unit defends or dodges (you can add this logic)
       val wildUnitDefends = scala.util.Random.nextBoolean()
 

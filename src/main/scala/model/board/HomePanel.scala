@@ -20,6 +20,20 @@ class HomePanel(private val _homePanelOwner: PlayerCharacter) extends AbstractPa
   /** Returns the owner of a Home Panel. */
   def homePanelOwner: PlayerCharacter = _homePanelOwner
 
+  /** The name of the panel.
+   *
+   * This might be used to display the name of the panel on the board.
+   *
+   * @return the name of the panel.
+   */
+  override def name: String = "Home Panel"
+
+  /** The player's character activates their home panel.
+   *
+   *  This method is invoked when a character lands on this panel.
+   *
+   *  @param player The player character that landed on this panel.
+   */
   private def activateHomePanel(player: PlayerCharacter): Unit = {
     if (player == homePanelOwner && !activate) {
       stayInHomePanel(player)
@@ -27,6 +41,12 @@ class HomePanel(private val _homePanelOwner: PlayerCharacter) extends AbstractPa
     }
   }
 
+  /** The player's character stays in their home panel.
+   *
+   *  This method is invoked when a character lands on this panel.
+   *
+   *  @param player The player character that landed on this panel.
+   */
   private def stayInHomePanel(player: PlayerCharacter): Unit = {
     player.currentHp += 1
     if (player.hasCompletedNormaObjective) {

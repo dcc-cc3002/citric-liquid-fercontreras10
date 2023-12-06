@@ -1,29 +1,37 @@
 package cl.uchile.dcc.citric
 package model.character
 
+import controller.event.NormaClearEvent
+import controller.observer.AbstractSubject
+
 import scala.util.Random
 
-/** Implements the common behavior of all entities.
+/** The `AbstractEntity` class represents an entity in the game.
+ * Implements the common behavior of all entities.
  */
-abstract class AbstractEntity extends Entity {
+abstract class AbstractEntity extends AbstractSubject[NormaClearEvent] with Entity {
 
   /** A random number generator used to simulate dice rolls. */
   private val _randomNumberGenerator: Random = new Random()
 
+  /** Represent the dice roll.*/
   def rollDice(): Int = {
     _randomNumberGenerator.nextInt(6) + 1
   }
 
+  /** Represents the attack of the entity. */
   def attackCombat(): Int = {
     this.attack + this.rollDice()
   }
 
+  /** Represents the defense of the entity. */
   def defendCombat(): Int = {
     val damage = calculateDamage()
     applyDamage(damage)
     damage
   }
 
+  /** Represents the evasion of the entity. */
   def evadeCombat(): Int = {
     if (shouldEvade()) {
       0
@@ -55,8 +63,7 @@ abstract class AbstractEntity extends Entity {
     currentHp = Math.max(0, newCurrentHp)
   }
 
-  /** Returns true if the entity should evade the attack, false otherwise.
-   */
+  /** Returns true if the entity should evade the attack, false otherwise. */
   private def shouldEvade(): Boolean = {
     val roll = rollDice()
     roll + evasion <= roll + attack

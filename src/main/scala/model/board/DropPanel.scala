@@ -12,6 +12,14 @@ import model.character.PlayerCharacter
  */
 class DropPanel extends AbstractPanel {
 
+  /** The name of the panel.
+   *
+   * This might be used to display the name of the panel on the board.
+   *
+   * @return the name of the panel.
+   */
+  override def name: String = "Drop Panel"
+
   /** Decreases the number of stars of the character that landed on this panel.
    *
    * This method is invoked when a character lands on this panel.

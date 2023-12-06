@@ -6,7 +6,7 @@ import scala.collection.mutable.ArrayBuffer
 
 /** Implements the common behavior of all panels.
  */
-abstract class AbstractPanel extends Panel{
+abstract class AbstractPanel extends Panel {
 
   val characters: ArrayBuffer[PlayerCharacter] = ArrayBuffer.empty[PlayerCharacter]
 

@@ -1,22 +1,23 @@
 package cl.uchile.dcc.citric
 package view
 
+import controller.GameController
 import scalafx.application.JFXApp3
 import scalafx.application.JFXApp3.PrimaryStage
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, Label}
 import scalafx.scene.layout.{BorderPane, VBox}
-import scalafx.scene.paint.Color
 
 object Game extends JFXApp3 {
 
-  //private val gameController = new GameController()
+  private val gameController = new GameController()
 
   override def start(): Unit = {
     stage = new PrimaryStage {
       title = "99.7% Citric Liquid"
-      width = 600
+      width = 700
       height = 600
+      resizable = false
       scene = new Scene {
         root = new BorderPane {
           style = "-fx-background-color: #dbdcff;"
@@ -30,8 +31,8 @@ object Game extends JFXApp3 {
     val startButton = new Button("Start")
     val exitButton = new Button("Exit")
 
-    startButton.onAction = _ => startGame()
-    exitButton.onAction = _ => exitApp()
+    startButton.onAction = _ => gameController.startGame()
+    exitButton.onAction = _ => exitGame()
 
     new VBox(20, createLabel(),
       new VBox(10, startButton, exitButton) {
@@ -47,22 +48,7 @@ object Game extends JFXApp3 {
     }
   }
 
-  private def startGame(): Unit = {
-    val gameStage = new PrimaryStage {
-      title = "99.7% Citric Liquid"
-      width = 600
-      height = 600
-      scene = new Scene {
-        fill = Color.web("#dbdcff")
-        content = new Label("Game Content Goes Here")
-      }
-    }
-
-    gameStage.show()
-    //gameStage.showAndWait()
-  }
-
-  private def exitApp(): Unit = {
+  private def exitGame(): Unit = {
     stage.close()
   }
 }

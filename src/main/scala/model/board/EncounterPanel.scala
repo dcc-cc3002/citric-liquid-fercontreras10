@@ -12,6 +12,14 @@ import scala.collection.mutable.ArrayBuffer
  */
 class EncounterPanel extends AbstractPanel {
 
+  /** The name of the panel.
+   *
+   * This might be used to display the name of the panel on the board.
+   *
+   * @return the name of the panel.
+   */
+  override def name: String = "Encounter Panel"
+
   /** Array of the WildUnits currently positioned on this panel.
    *
    * In the game, the characters will enter a combat with an aleatory WildUnit.

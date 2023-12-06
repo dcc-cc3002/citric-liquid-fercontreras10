@@ -12,10 +12,10 @@ import scala.util.Random
  *
  * @author [[https://github.com/fercontreras10/ Fernanda Contreras C.]]
  */
-class TurnSystem(players: List[PlayerCharacter]) {
+class TurnSystem(players: ArrayBuffer[PlayerCharacter]) {
 
   /** Represents the order in which the players will play. */
-  private[model] val playerOrder: ArrayBuffer[PlayerCharacter] = ArrayBuffer(players: _*)
+  private[model] val playerOrder: ArrayBuffer[PlayerCharacter] = players
   /** Random number generator. */
   private val random = new Random()
   /** Represents the index of the current player in the playerOrder array. */
@@ -30,9 +30,10 @@ class TurnSystem(players: List[PlayerCharacter]) {
    *
    * This method is invoked when the game starts
    */
-  def startGame(): Unit = {
+  def playersOrder(): Unit = {
+    val remainingPlayers = players.clone()
     playerOrder.clear()
-    val remainingPlayers = ArrayBuffer(players: _*)
+
     while (remainingPlayers.nonEmpty) {
       val nextPlayer = remainingPlayers.remove(random.nextInt(remainingPlayers.length))
       playerOrder += nextPlayer

@@ -5,6 +5,8 @@ import model.character.PlayerCharacter
 import model.game.TurnSystem
 import model.norma.Norma1
 
+import scalafx.scene.paint.Color
+
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
@@ -18,6 +20,7 @@ class PanelTest extends munit.FunSuite {
   */
   private val name1 = "testPlayer"
   private val name2 = "testPlayer2"
+  private val color = Color.web("#C9E4DE")
   private val maxHp = 10
   private val currentHp = 10
   private val attack = 1
@@ -54,6 +57,7 @@ class PanelTest extends munit.FunSuite {
   override def beforeEach(context: BeforeEach): Unit = {
     character = new PlayerCharacter(
       name1,
+      color,
       maxHp,
       currentHp,
       attack,
@@ -71,6 +75,7 @@ class PanelTest extends munit.FunSuite {
     )
     otherCharacter = new PlayerCharacter(
       name2,
+      color,
       maxHp,
       currentHp,
       attack,
@@ -92,7 +97,7 @@ class PanelTest extends munit.FunSuite {
     bonusPanel = new BonusPanel()
     dropPanel = new DropPanel()
     encounterPanel = new EncounterPanel()
-    turnSystem = new TurnSystem(List(character))
+    turnSystem = new TurnSystem(ArrayBuffer[PlayerCharacter](character, otherCharacter))
   }
 
   test("A character should have correctly set their attributes") {
@@ -194,6 +199,50 @@ class PanelTest extends munit.FunSuite {
   test("A character should enter a combat with an aleatory enemy when it falls on a encounter panel") {
     encounterPanel.addCharacter(character)
     encounterPanel.apply(character)
+  }
+
+  test("startCombat initiates combat when conditions are met") {
+    val panel = new NeutralPanel
+    panel.addCharacter(character)
+    val opponent = otherCharacter
+    panel.addCharacter(opponent)
+    panel.startCombat(character, startCombat = true)
+    assert(panel.characters.contains(opponent))
+  }
+
+  test("startCombat does not initiate combat when conditions are not met") {
+    val panel = new NeutralPanel
+    panel.addCharacter(character)
+    panel.startCombat(character, startCombat = false)
+    assertEquals(panel.characters.length, 1)
+  }
+
+  test("Correct return of names") {
+    assertEquals(neutralPanel.name, "Neutral Panel")
+    assertEquals(homePanel.name, "Home Panel")
+    assertEquals(bonusPanel.name, "Bonus Panel")
+    assertEquals(dropPanel.name, "Drop Panel")
+    assertEquals(encounterPanel.name, "Encounter Panel")
+  }
+
+  test("Board should draw correctly") {
+    val board = new Board
+
+    val expectedOutput =
+      """a1 b1 c1             h1 i1 j1
+        |a2    c2 d2 e2 f2 g2 h2    j2
+        |a3 b2 c3             h3 i2 j3
+        |""".stripMargin
+
+    val printedOutput = new java.io.ByteArrayOutputStream() // Redirect stdout to capture printed output
+    Console.withOut(printedOutput) {
+      board.drawBoard()
+    }
+
+    val normalizedExpectedOutput = expectedOutput.stripMargin.replaceAll("\\s", "")
+    val normalizedActualOutput = printedOutput.toString.stripMargin.replaceAll("\\s", "")
+
+    assert(normalizedActualOutput == normalizedExpectedOutput)
   }
 
 }

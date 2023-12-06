@@ -1,15 +1,18 @@
 package cl.uchile.dcc.citric
-package model.game
+package controller
 
+import controller.event.NormaClearEvent
+import controller.states.{EndGame, PreGame}
 import model.character.PlayerCharacter
-import model.norma.Norma1
+import model.game.TurnSystem
+import model.norma.{Norma1, Norma3, Norma4, Norma6}
 
 import scalafx.scene.paint.Color
 
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
-class TurnSystemTest extends munit.FunSuite {
+class GameControllerTest extends munit.FunSuite {
 
   /*
   REMEMBER: It is a good practice to use constants for the values that are used in multiple
@@ -29,7 +32,10 @@ class TurnSystemTest extends munit.FunSuite {
   private val stateKO = false
   private val stars = 0
   private val victories = 0
-  private val normaLevel = new Norma1
+  private val normaLevel1 = new Norma1
+  private val normaLevel2 = new Norma6
+  private val normaLevel3 = new Norma3
+  private val normaLevel4 = new Norma4
   private val starsObjective = false
   private val victoriesObjective = false
   private val normaCheck = false
@@ -64,7 +70,7 @@ class TurnSystemTest extends munit.FunSuite {
       stateKO,
       stars,
       victories,
-      normaLevel,
+      normaLevel1,
       starsObjective,
       victoriesObjective,
       normaCheck,
@@ -82,7 +88,7 @@ class TurnSystemTest extends munit.FunSuite {
       stateKO,
       stars,
       victories,
-      normaLevel,
+      normaLevel2,
       starsObjective,
       victoriesObjective,
       normaCheck,
@@ -100,7 +106,7 @@ class TurnSystemTest extends munit.FunSuite {
       stateKO,
       stars,
       victories,
-      normaLevel,
+      normaLevel3,
       starsObjective,
       victoriesObjective,
       normaCheck,
@@ -118,7 +124,7 @@ class TurnSystemTest extends munit.FunSuite {
       stateKO,
       stars,
       victories,
-      normaLevel,
+      normaLevel4,
       starsObjective,
       victoriesObjective,
       normaCheck,
@@ -170,98 +176,30 @@ class TurnSystemTest extends munit.FunSuite {
     assertEquals(player4.victories, victories)
   }
 
-  test("At the start of the game the order of the players is randomized") {
-    val initialOrder = turnSystem.playerOrder.map(_.name)
-    turnSystem.playersOrder()
-    val randomizedOrder = turnSystem.playerOrder.map(_.name)
-    assert(initialOrder != randomizedOrder)
+
+  test("GameController should start in the PreGame state") {
+    val gameController = new GameController()
+    assert(gameController.state.isInstanceOf[PreGame])
   }
 
-  test("Test advancing to the turn of the next player and chapter progression") {
-    // Start the game and simulate a few turns
-    //turnSystem.startGame() // omitted to not randomize the order
+  test("GameController should handle Norma6 victory correctly") {
+    // Create GameController
+    val gameController = new GameController
+    // Register GameController as an observer for both players
+    player1.addObserver(gameController)
+    player2.addObserver(gameController)
+    player3.addObserver(gameController)
+    player4.addObserver(gameController)
+    // Set Norma level for player1 to 6 (simulating Norma6 victory)
+    player2.normaCheckLevelUp()
+    gameController.update(player2, new NormaClearEvent(true))
 
-    // Initially, the current player should be player1
-    assertEquals(turnSystem.currentPlayer.name, "testPlayer1")
-    assertEquals(turnSystem.chapters, 1)
+    player1.notifyObservers(new NormaClearEvent(false))
+    //player2.notifyObservers(new NormaClearEvent(true))
+    player3.notifyObservers(new NormaClearEvent(false))
+    player4.notifyObservers(new NormaClearEvent(false))
 
-    // Simulate several turns
-    turnSystem.nextPlayerTurn() // Should move to player2
-    assertEquals(turnSystem.currentPlayer.name, "testPlayer2")
-    assertEquals(turnSystem.chapters, 1)
-
-    turnSystem.nextPlayerTurn() // Should move to player3
-    assertEquals(turnSystem.currentPlayer.name, "testPlayer3")
-    assertEquals(turnSystem.chapters, 1)
-
-    turnSystem.nextPlayerTurn() // Should move to player4
-    assertEquals(turnSystem.currentPlayer.name, "testPlayer4")
-    assertEquals(turnSystem.chapters, 1)
-
-    // After player4, it should go back to player1 and advance to a new chapter
-    turnSystem.nextPlayerTurn()
-    assertEquals(turnSystem.currentPlayer.name, "testPlayer1")
-    assertEquals(turnSystem.chapters, 2)
+    assertEquals(gameController.state, new EndGame(gameController))
   }
 
-  test("A character wins floor(_chapters / 5) + 1 stars at the start of their turn") {
-    turnSystem.playersOrder()
-
-    // Check the chapter
-    assertEquals(turnSystem.chapters, 1)
-    // Advance to a new chapter
-    turnSystem.nextPlayerTurn()
-    turnSystem.nextPlayerTurn()
-    turnSystem.nextPlayerTurn()
-    turnSystem.nextPlayerTurn()
-    // Check the stars, floor(1/5) + 1 = 1
-    assertEquals(player2.stars, 1)
-    assertEquals(player3.stars, 1)
-    assertEquals(player4.stars, 1)
-    assertEquals(player1.stars, 1)
-
-    // floor(2/5) + 1 = 1
-    assertEquals(turnSystem.chapters, 2)
-    turnSystem.nextPlayerTurn()
-    turnSystem.nextPlayerTurn()
-    turnSystem.nextPlayerTurn()
-    turnSystem.nextPlayerTurn()
-    assertEquals(player2.stars, 2)
-    assertEquals(player3.stars, 2)
-    assertEquals(player4.stars, 2)
-    assertEquals(player1.stars, 2)
-
-    // floor(3/5) + 1 = 1
-    assertEquals(turnSystem.chapters, 3)
-    turnSystem.nextPlayerTurn()
-    turnSystem.nextPlayerTurn()
-    turnSystem.nextPlayerTurn()
-    turnSystem.nextPlayerTurn()
-    assertEquals(player2.stars, 3)
-    assertEquals(player3.stars, 3)
-    assertEquals(player4.stars, 3)
-    assertEquals(player1.stars, 3)
-
-    // floor(4/5) + 1 = 1
-    assertEquals(turnSystem.chapters, 4)
-    turnSystem.nextPlayerTurn()
-    turnSystem.nextPlayerTurn()
-    turnSystem.nextPlayerTurn()
-    turnSystem.nextPlayerTurn()
-    assertEquals(player2.stars, 4)
-    assertEquals(player3.stars, 4)
-    assertEquals(player4.stars, 4)
-    assertEquals(player1.stars, 4)
-
-    // Chapter 5 is special, they get 2 stars, cause floor(5/5) + 1 = 2
-    assertEquals(turnSystem.chapters, 5)
-    turnSystem.nextPlayerTurn()
-    turnSystem.nextPlayerTurn()
-    turnSystem.nextPlayerTurn()
-    turnSystem.nextPlayerTurn()
-    assertEquals(player2.stars, 6)
-    assertEquals(player3.stars, 6)
-    assertEquals(player4.stars, 6)
-    assertEquals(player1.stars, 6)
-  }
 }

@@ -5,6 +5,9 @@ import model.board.HomePanel
 import model.game.TurnSystem
 import model.norma._
 
+import scalafx.scene.paint.Color
+
+import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
 class PlayerCharacterTest extends munit.FunSuite {
@@ -14,7 +17,8 @@ class PlayerCharacterTest extends munit.FunSuite {
   This will make your tests more readable, easier to maintain, and less error-prone.
   */
   private val name1 = "testPlayer"
-  //private val name2 = "testPlayer2"
+  private val name2 = "testPlayer2"
+  private val color = Color.web("#C9E4DE")
   private val maxHp = 10
   private val currentHp = 0
   private val attack = 1
@@ -24,6 +28,7 @@ class PlayerCharacterTest extends munit.FunSuite {
   private val stars = 0
   private val victories = 0
   private val normaLevel = new Norma1
+  private val normaLevel2 = new Norma6
   private val starsObjective = false
   private val victoriesObjective = false
   private val normaCheck = false
@@ -37,7 +42,7 @@ class PlayerCharacterTest extends munit.FunSuite {
   to worry about the state of the object between tests.
   */
   private var character: PlayerCharacter = _  // <- x = _ is the same as x = null
-  //private var otherCharacter: PlayerCharacter = _
+  private var otherCharacter: PlayerCharacter = _
   private var turnSystem: TurnSystem = _
   /* Add any other variables you need here... */
   private var randomNumberGenerator = new Random(11)
@@ -46,6 +51,7 @@ class PlayerCharacterTest extends munit.FunSuite {
   override def beforeEach(context: BeforeEach): Unit = {
     character = new PlayerCharacter(
       name1,
+      color,
       maxHp,
       currentHp,
       attack,
@@ -61,8 +67,9 @@ class PlayerCharacterTest extends munit.FunSuite {
       normaCheck,
       turnSystem
     )
-    /*otherCharacter = new PlayerCharacter(
+    otherCharacter = new PlayerCharacter(
       name2,
+      color,
       maxHp,
       currentHp,
       attack,
@@ -72,19 +79,20 @@ class PlayerCharacterTest extends munit.FunSuite {
       stateKO,
       stars,
       victories,
-      normaLevel,
+      normaLevel2,
       starsObjective,
       victoriesObjective,
       normaCheck,
       turnSystem
-    )*/
+    )
     randomNumberGenerator = new Random(11)
-    turnSystem = new TurnSystem(List(character))
+    turnSystem = new TurnSystem(ArrayBuffer[PlayerCharacter](character))
   }
 
   test("A character should have correctly set their attributes") {
     assertEquals(character.name, name1)
-    //assertEquals(character.name, name2)
+    assertEquals(otherCharacter.name, name2)
+    assertEquals(character.color, color)
     assertEquals(character.maxHp, maxHp)
     assertEquals(character.currentHp, currentHp)
     assertEquals(character.attack, attack)
@@ -110,14 +118,14 @@ class PlayerCharacterTest extends munit.FunSuite {
   // are always the same for the same seed.
   test("A character should be able to roll a dice with a fixed seed") {
     val other =
-      new PlayerCharacter(name1, maxHp, currentHp, attack, defense, evasion, new Random(11), stateKO, stars, victories, normaLevel, starsObjective, victoriesObjective, normaCheck, turnSystem)
+      new PlayerCharacter(name1, color, maxHp, currentHp, attack, defense, evasion, new Random(11), stateKO, stars, victories, normaLevel, starsObjective, victoriesObjective, normaCheck, turnSystem)
     for (_ <- 1 to 10) {
       assertEquals(character.rollDice(), other.rollDice())
     }
   }
 
   test("The characters should have unique names") {
-    val character2 = new PlayerCharacter("testPlayer2", maxHp, currentHp, attack, defense, evasion, randomNumberGenerator, stateKO, stars, victories, normaLevel, starsObjective, victoriesObjective, normaCheck, turnSystem)
+    val character2 = new PlayerCharacter("testPlayer2", color, maxHp, currentHp, attack, defense, evasion, randomNumberGenerator, stateKO, stars, victories, normaLevel, starsObjective, victoriesObjective, normaCheck, turnSystem)
     assert(!character2.name.equals(character.name))
   }
 
@@ -142,7 +150,7 @@ class PlayerCharacterTest extends munit.FunSuite {
   }
 
   test("Unsuccessful recovery should not restore health points") {
-    character.setTurnSystem(new TurnSystem(List(character))) // Initialize a TurnSystem
+    character.setTurnSystem(new TurnSystem(ArrayBuffer(character)))
     character.knockOut()
     character.recovery()
     assertEquals(character.stateKO, true)
@@ -150,7 +158,7 @@ class PlayerCharacterTest extends munit.FunSuite {
   }
 
   test("Successful recovery should restore health points") {
-    val turnSystem = new TurnSystem(List(character))
+    val turnSystem = new TurnSystem(ArrayBuffer(character))
     character.setTurnSystem(turnSystem)
     character.knockOut()
     // check chapter
@@ -390,4 +398,49 @@ class PlayerCharacterTest extends munit.FunSuite {
     assertEquals(wildUnit.stars, 3)
   }
 
+  test("Player should transfer half of opponent's stars after winning combat against another player") {
+    otherCharacter.stars = 10
+    character.playerWinCombatAgainstPlayer(otherCharacter)
+    assertEquals(character.stars, 5)
+  }
+
+  test("Player can decide to combat PlayerCharacter or WildUnit") {
+    character.decideCombat(otherCharacter, defend = true)
+    assertEquals(character.currentHp, 0)
+    val wildUnitOpponent = new Chicken
+    character.decideCombat(wildUnitOpponent, defend = false)
+    assertEquals(character.currentHp, 0)
+  }
+
+  test("Player evading should not reduce opponent's attack") {
+    val opponent = new Chicken
+    val initialOpponentAttack = opponent.attack
+    character.decideCombat(opponent, defend = false)
+    assertEquals(opponent.attack, initialOpponentAttack)
+  }
+
+  test("Player combat against another PlayerCharacter") {
+    character.playerCombat(character, otherCharacter)
+    assertEquals(2, character.victories)
+    assertEquals(2, otherCharacter.victories)
+    assertEquals(0, character.stars)
+    assertEquals(0, otherCharacter.stars)
+  }
+
+  test("Player combat against another PlayerCharacter with victories") {
+    otherCharacter.currentHp = 1
+    character.playerCombat(character, otherCharacter)
+    assertEquals(2, character.victories)
+    assertEquals(2, otherCharacter.victories)
+    assertEquals(0, character.stars)
+    assertEquals(0, otherCharacter.stars)
+  }
+
+  test("hasReachedNorma6 should return true when _normaLevel is 6") {
+    assertEquals(otherCharacter.hasReachedNorma6, true)
+  }
+
+  test("hasReachedNorma6 should return false when _normaLevel is not 6") {
+    assertEquals(character.hasReachedNorma6, false)
+  }
 }

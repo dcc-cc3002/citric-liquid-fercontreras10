@@ -3,10 +3,10 @@ package controller.states
 
 import controller.GameController
 
-trait GameState {
+class GameState protected (val context: GameController) {
+  var chapter: Int = 1
 
-  var controller: GameController
-  def startGame(): Unit = { /* ... */ }
-  def rollDice(): Unit = { /* ... */ }
-
+  def takeAction(): Unit = {
+    context.state = this
+  }
 }

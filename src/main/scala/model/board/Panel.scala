@@ -34,6 +34,14 @@ trait Panel {
    */
   var nextPanels: ArrayBuffer[Panel]
 
+  /** The name of the panel.
+   *
+   * This might be used to display the name of the panel on the board.
+   *
+   * @return the name of the panel.
+   */
+  def name: String
+
   /** Adds a character to the list of characters currently on this panel.
    *
    * This might be invoked when a player moves to this panel or starts their turn on it.
