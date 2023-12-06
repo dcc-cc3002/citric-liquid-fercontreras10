@@ -6,6 +6,7 @@ import controller.GameController
 /** Represents the state of the game when a player is recovering.
  * The player should be able to recover in this state or not.
  * depending on the result of the dice it can recover or not.
+ *
  * @param context the context of the game.
  */
 class Recovery(context: GameController) extends GameState(context) {
